@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+
+//Gera um token para o login
 import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
@@ -13,6 +15,7 @@ class SessionController {
       password: Yup.string().required(),
     });
 
+    //Checa se todos os campos estão preenchidos
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
@@ -21,16 +24,19 @@ class SessionController {
 
     const user = await User.findOne({ where: { email } });
 
+    //Verifica se o email sugerido está no banco de dados
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
     }
 
+    //Verifica se a senha sugerida está no banco de dados
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
     const { id, name } = user;
 
+    //Mostra todos os dados do usuário conectado
     return res.json({
       user: {
         id,
