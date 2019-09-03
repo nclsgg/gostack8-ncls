@@ -11,10 +11,12 @@ class App {
     this.routes();
   }
 
+  //Faz o middleware usar json
   middlewares() {
     this.server.use(express.json());
   }
 
+  //Faz com que as rotas da aplicação seja o routes.js
   routes() {
     this.server.use(routes);
   }
