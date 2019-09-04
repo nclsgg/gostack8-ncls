@@ -1,3 +1,5 @@
+//Responsável pela autenticação do usuário na plataforma
+
 import * as Yup from 'yup';
 
 //Gera um token para o login

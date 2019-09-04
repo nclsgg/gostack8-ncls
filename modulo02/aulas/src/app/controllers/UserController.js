@@ -1,3 +1,5 @@
+//Responsável por criação e update de um usuário qualquer.
+
 import * as Yup from 'yup';
 
 import User from '../models/User';

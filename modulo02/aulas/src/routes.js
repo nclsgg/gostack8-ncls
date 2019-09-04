@@ -5,6 +5,7 @@ import multerConfig from './config/multer';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
+import ProviderController from './app/controllers/ProviderController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -22,6 +23,9 @@ routes.use(authMiddleware);
 
 //Cria uma rota do tipo put para a alteração de dados do usuário
 routes.put('/users', UserController.update);
+
+//Cria uma rota do tipo get para a listagem de provedores de serviços
+routes.get('/providers', ProviderController.index);
 
 //Cria uma rota do tipo post para o upload de arquivos
 routes.post('/files', upload.single('file'), FileController.store);
