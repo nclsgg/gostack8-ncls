@@ -1,4 +1,4 @@
-//Responsável por criação e update de um usuário qualquer.
+// Responsável por criação e update de um usuário qualquer.
 
 import * as Yup from 'yup';
 
@@ -16,19 +16,19 @@ class UserController {
         .min(6),
     });
 
-    //Checa se todos os campos estão preenchidos
+    // Checa se todos os campos estão preenchidos
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
-    //Verifica se o email do usuário que será criado já existe
+    // Verifica se o email do usuário que será criado já existe
     if (userExists) {
       return res.status(400).json({ error: 'user already exists' });
     }
 
-    //Após o usuário ser criado, mostra todos os seus dados
+    // Após o usuário ser criado, mostra todos os seus dados
     const { id, name, email, provider } = await User.create(req.body);
     return res.json({
       id,
@@ -38,13 +38,13 @@ class UserController {
     });
   }
 
-  //Alterar dados do usuário
+  // Alterar dados do usuário
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
       oldPassword: Yup.string().min(6),
-      //Verifica se a senha foi digitada e a confirmação da senha batem
+      // Verifica se a senha foi digitada e a confirmação da senha batem
       password: Yup.string()
         .min(6)
         .when('oldPassword', (oldPassword, field) =>
@@ -63,7 +63,7 @@ class UserController {
 
     const user = await User.findByPk(req.userId);
 
-    //Verifica se os dados inseridos já existem em outro usuário
+    // Verifica se os dados inseridos já existem em outro usuário
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } });
 
@@ -72,7 +72,7 @@ class UserController {
       }
     }
 
-    //Verifica se a senha antiga bate
+    // Verifica se a senha antiga bate
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
       return res.status(401).json({ error: 'Password does not match' });
     }

@@ -16,7 +16,7 @@ class User extends Model {
       }
     );
 
-    //Cria um hash da senha para segurança
+    // Cria um hash da senha para segurança
     this.addHook('beforeSave', async user => {
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
@@ -26,12 +26,12 @@ class User extends Model {
     return this;
   }
 
-  //Relacionar a coluna Users com Files
+  // Relacionar a coluna Users com Files
   static associate(models) {
     this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
-  //Checa se a senha está correta
+  // Checa se a senha está correta
   checkPassword(password) {
     return bcrypt.compare(password, this.password_hash);
   }

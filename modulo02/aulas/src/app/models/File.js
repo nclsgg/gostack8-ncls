@@ -6,7 +6,7 @@ class File extends Model {
       {
         name: Sequelize.STRING,
         path: Sequelize.STRING,
-        //Cria uma URL para o Frontend utilizar essa imagem
+        // Cria uma URL para o Frontend utilizar essa imagem
         url: {
           type: Sequelize.VIRTUAL,
           get() {

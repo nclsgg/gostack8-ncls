@@ -6,28 +6,49 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import ProviderController from './app/controllers/ProviderController';
+import AppointmentController from './app/controllers/AppointmentController';
+import NotificationController from './app/controllers/NotificationController';
 
 import authMiddleware from './app/middlewares/auth';
+import ScheduleController from './app/controllers/ScheduleController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
 
-//Cria uma rota do tipo post para a criação de usuários
+// Criação de usuários
 routes.post('/users', UserController.store);
 
-//Cria uma rota do tipo post para o login de usuários
+// Login de usuários
 routes.post('/sessions', SessionController.store);
 
-//Todas as rotas abaixo terão esse middleware que verifica os dados colocados
+// Todas as rotas abaixo terão esse middleware que verifica os dados colocados
 routes.use(authMiddleware);
 
-//Cria uma rota do tipo put para a alteração de dados do usuário
+// Alteração de dados do usuário
 routes.put('/users', UserController.update);
 
-//Cria uma rota do tipo get para a listagem de provedores de serviços
+// Listagem de provedores de serviços
 routes.get('/providers', ProviderController.index);
 
-//Cria uma rota do tipo post para o upload de arquivos
+// Cria rota para o agendamento de serviços
+routes.post('/appointments', AppointmentController.store);
+
+// Listagem de serviços de todos os providers
+routes.get('/appointments', AppointmentController.index);
+
+// Cancelamento de agendamento
+routes.delete('/appointments/:id', AppointmentController.delete);
+
+// Listagem de serviços de um só provider
+routes.get('/schedules', ScheduleController.index);
+
+// Listagem de notificações do usuário
+routes.get('/notifications', NotificationController.index);
+
+// Marca a notificação como lida
+routes.put('/notifications/:id', NotificationController.update);
+
+// Upload de arquivos
 routes.post('/files', upload.single('file'), FileController.store);
 
 export default routes;

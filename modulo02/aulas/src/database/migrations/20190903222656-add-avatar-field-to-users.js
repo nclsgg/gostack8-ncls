@@ -1,12 +1,10 @@
-'use strict';
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    //Cria uma coluna
+    // Cria uma coluna
     return queryInterface.addColumn(
       'users',
       'avatar_id',
-      //Todo avatar_id na tabela users será um id contido na tabela files
+      // Todo avatar_id na tabela users será um id contido na tabela files
       {
         type: Sequelize.INTEGER,
         references: { model: 'files', key: 'id' },
