@@ -10,10 +10,12 @@ import Appointment from '../models/Appointments';
 import User from '../models/User';
 import File from '../models/File';
 import Notification from '../schemas/Notification';
-import Mail from '../../lib/Mail';
+import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
 
 class AppointmentController {
   async index(req, res) {
+    // Cria um schema para trabalhar com a criação de appointments
     const { page = 1 } = req.query;
     const listAppointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
@@ -127,6 +129,7 @@ class AppointmentController {
       });
     }
 
+    // Checa se o cancelamento está sendo feito antes de 2 horas do evento
     const dateWithSub = subHours(appointment.date, 2);
 
     if (isBefore(dateWithSub, new Date())) {
@@ -139,17 +142,9 @@ class AppointmentController {
 
     await appointment.save();
 
-    await Mail.sendMail({
-      to: `${appointment.provider.name} <${appointment.provider.email}>`,
-      subject: 'Agendamento cancelado',
-      template: 'cancellation',
-      context: {
-        provider: appointment.provider.name,
-        user: appointment.user.name,
-        date: format(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h'", {
-          locale: pt,
-        }),
-      },
+    // Passa informações para o job, como por exemplo, os dados do appointment
+    await Queue.add(CancellationMail.key, {
+      appointment,
     });
 
     return res.json(appointment);
