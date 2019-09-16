@@ -24,9 +24,11 @@ class CancellationMail {
         provider: appointment.provider.name,
         user: appointment.user.name,
         date: format(
-          parseISO(appointment.date, "'dia' dd 'de' MMMM', às' H:mm'h'", {
+          parseISO(appointment.date),
+          "'dia' dd 'de' MMM', às' H:mm'h'h",
+          {
             locale: pt,
-          })
+          }
         ),
       },
     });
